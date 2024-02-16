@@ -2,14 +2,23 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
 
 export default function SummaryForm() {
   const [tcChecked, setTcChecked] = useState(false);
 
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Body>沒有任何聖代會送達</Popover.Body>
+    </Popover>
+  );
+
   const checkboxLabel = (
     <span>
       我已閱讀並同意
-      <span style={{ color: "#05eeff" }}> 訂購規定</span>
+      <OverlayTrigger placement="right" overlay={popover}>
+        <span style={{ color: "#05eeff" }}> 訂購規定</span>
+      </OverlayTrigger>
     </span>
   );
 
