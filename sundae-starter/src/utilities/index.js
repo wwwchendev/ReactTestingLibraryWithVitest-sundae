@@ -23,12 +23,23 @@ export function formatCurrency(currency) {
 }
 
 //顯示翻譯名稱
-export const displayFlavor = (flavor) => {
+export const displaySundaeName = (option, type) => {
   const scoopFlavors = {
     'Mint chip': '薄荷巧克力',
     'Vanilla': '香草',
     'Chocolate': '巧克力',
     'Salted caramel': '海鹽焦糖'
   }
-  return scoopFlavors[flavor] || flavor;
+  const toppings = {
+    'M&Ms': 'M&M巧克力',
+    'Hot fudge': '熱熔巧克力醬',
+    'Peanut butter cups': '花生醬',
+    'Gummi bears': '小熊軟糖',
+    'Mochi': '小麻糬',
+    'Cherries': '櫻桃',
+
+  }
+  if (type === 'scoop') { return scoopFlavors[option] || option; }
+  if (type === 'topping') { return toppings[option] || option; }
+  return option;
 };

@@ -2,7 +2,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { useOrderDetails } from "../../contexts/OrderDetails";
-import { displayFlavor } from '../../utilities';
+import { displaySundaeName } from '../../utilities';
 
 export default function ScoopOptions({ name, imagePath }) {
   const { updateItemCount } = useOrderDetails();
@@ -27,7 +27,7 @@ export default function ScoopOptions({ name, imagePath }) {
           xs="6"
           style={{ textAlign: "right" }}
         >
-          {displayFlavor(name)}
+          {displaySundaeName(name, 'scoop')}
           <p>{name}</p>
         </Form.Label>
         <Col xs="5" style={{ textAlign: "left" }}>

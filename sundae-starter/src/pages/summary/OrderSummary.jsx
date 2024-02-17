@@ -1,7 +1,7 @@
 import React from "react";
 import SummaryForm from "./SummaryForm";
 import { useOrderDetails } from "../../contexts/OrderDetails";
-import { formatCurrency, displayFlavor } from "../../utilities";
+import { formatCurrency, displaySundaeName } from "../../utilities";
 
 export default function OrderSummary({ setOrderPhase }) {
   const { totals, optionCounts } = useOrderDetails();
@@ -12,23 +12,23 @@ export default function OrderSummary({ setOrderPhase }) {
   const scoopKeys = Object.keys(optionCounts.scoops);
   const scoopList = scoopKeys.map((key) => (
     <li key={key}>
-      {`${displayFlavor(key)} * ${optionCounts.scoops[key]}球`}
+      {`${displaySundaeName(key, 'scoop')} * ${optionCounts.scoops[key]}球`}
     </li>
   ));
   // 方法2:
   // const scoopArray = Object.entries(optionCounts.scoops);
   // const scoopList = scoopArray.map(([key, value]) => (
   //   <li key={key}>
-  //     {`${displayFlavor(key)} * ${value}球`}
+  //     {`${displaySundaeName(key,'scoop')} * ${value}球`}
   //   </li>
   // ));
 
   // 只有有選擇配料的時候(配料總數不為0)才會出現配料清單
   const hasToppings = totals.toppings > 0;
   let toppingsDisplay = null;
-  if (!hasToppings) {
+  if (hasToppings) {
     const toppingsArray = Object.keys(optionCounts.toppings);
-    const toppingList = toppingsArray.map((key) => <li key={key}>{key}</li>);
+    const toppingList = toppingsArray.map((key) => <li key={key}>{displaySundaeName(key, 'topping')}</li>);
     toppingsDisplay = (
       <>
         <h2>配料: {formatCurrency(totals.toppings)}</h2>
