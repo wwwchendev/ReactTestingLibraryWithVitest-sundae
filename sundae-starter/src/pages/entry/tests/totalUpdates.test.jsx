@@ -2,6 +2,7 @@
 import { render, screen } from "../../../test-utils/testing-library-utils";
 import userEvent from "@testing-library/user-event";
 import Options from "../Options";
+import OrderEntry from "../OrderEntry";
 
 test("基底改變的時候更新基底小計價格", async () => {
   const user = userEvent.setup();
@@ -51,4 +52,81 @@ test("配料改變的時候更新配料小計價格", async () => {
   //移除熱熔巧克力醬並檢查小計
   await user.click(hotFudgeCheckbox);
   expect(toppingsTotal).toHaveTextContent("1.50");
+});
+
+describe("累計", () => {
+
+  test("先添加基底，總計會正確更新", async () => {
+    const user = userEvent.setup();
+    //測試總額是否從 $0.00 開始
+    render(<OrderEntry />);
+    const grandTotal = screen.getByRole("heading", { name: /總計: \$/ });
+    expect(grandTotal).toHaveTextContent("0.00");
+
+    //將香草口味基底數量更新為2 並檢查總計(2*2=4)
+    const vanillaInput = await screen.findByRole("spinbutton", {
+      name: /Vanilla/i
+    });
+    await user.clear(vanillaInput);
+    await user.type(vanillaInput, "2");
+    expect(grandTotal).toHaveTextContent("4.00");
+
+    //加入熱熔巧克力醬(4+1.5=5.5)
+    const hotFudgeCheckbox = await screen.findByRole("checkbox", {
+      name: "Hot fudge",
+    });
+    await user.click(hotFudgeCheckbox);
+    expect(grandTotal).toHaveTextContent("5.50");
+  });
+
+  test("先添加配料，總計會正確更新", async () => {
+    const user = userEvent.setup();
+    render(<OrderEntry />);
+    const grandTotal = screen.getByRole("heading", { name: /總計: \$/ });
+
+    //加入熱熔巧克力醬(1.5*1=1.5)
+    const hotFudgeCheckbox = await screen.findByRole("checkbox", {
+      name: "Hot fudge",
+    });
+    await user.click(hotFudgeCheckbox);
+    expect(grandTotal).toHaveTextContent("1.50");
+
+    //將香草口味基底數量更新為2 並檢查總計(1.5+2*2=5.5)
+    const vanillaInput = await screen.findByRole("spinbutton", {
+      name: /Vanilla/i
+    });
+    await user.clear(vanillaInput);
+    await user.type(vanillaInput, "2");
+    expect(grandTotal).toHaveTextContent("5.50");
+  });
+
+  test("如果刪除項目，總計會正確更新", async () => {
+    const user = userEvent.setup();
+    render(<OrderEntry />);
+
+    //加入熱熔巧克力醬(1.5*1=1.5)
+    const hotFudgeCheckbox = await screen.findByRole("checkbox", {
+      name: "Hot fudge",
+    });
+    await user.click(hotFudgeCheckbox);
+    const grandTotal = screen.getByRole("heading", { name: /總計: \$/ });
+    expect(grandTotal).toHaveTextContent("1.50");
+
+    //將香草口味基底數量更新為2 並檢查總計(1.5+2*2=5.5)
+    const vanillaInput = await screen.findByRole("spinbutton", {
+      name: /Vanilla/i
+    });
+    await user.clear(vanillaInput);
+    await user.type(vanillaInput, "2");
+    expect(grandTotal).toHaveTextContent("5.50");
+
+    //將香草口味基底數量更新為1 並檢查總計(5.5-2=3.5)
+    await user.clear(vanillaInput);
+    await user.type(vanillaInput, "1");
+    expect(grandTotal).toHaveTextContent("3.50");
+
+    //移除熱熔巧克力醬 並檢查總計(3.5-1.5=2)
+    await user.click(hotFudgeCheckbox);
+    expect(grandTotal).toHaveTextContent("2.00");
+  });
 });
