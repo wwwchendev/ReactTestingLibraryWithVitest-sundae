@@ -7,7 +7,7 @@ test("基底改變的時候更新基底小計價格", async () => {
   const user = userEvent.setup();
   render(<Options optionType="scoops" />);
 
-  //確認總金額初始值為 $0.00
+  //確認小計初始值為 $0.00
   const scoopsSubtotal = screen.getByText("基底 小計: $", { exact: false });
   expect(scoopsSubtotal).toHaveTextContent("0.00");
 
@@ -28,3 +28,27 @@ test("基底改變的時候更新基底小計價格", async () => {
   expect(scoopsSubtotal).toHaveTextContent("6.00");
 });
 
+test("配料改變的時候更新配料小計價格", async () => {
+  const user = userEvent.setup();
+  render(<Options optionType="toppings" />);
+
+  //確認小計初始值為 $0.00
+  const toppingsTotal = screen.getByText("配料 小計: $", { exact: false });
+  expect(toppingsTotal).toHaveTextContent("0.00");
+
+  //加入M&Ms並檢查小計
+  const cherriesCheckbox = await screen.findByRole("checkbox", {
+    name: /M&Ms/i,
+  });
+  await user.click(cherriesCheckbox);
+  expect(toppingsTotal).toHaveTextContent("1.50");
+
+  //加入熱熔巧克力醬並檢查小計
+  const hotFudgeCheckbox = screen.getByRole("checkbox", { name: /Hot fudge/i, });
+  await user.click(hotFudgeCheckbox);
+  expect(toppingsTotal).toHaveTextContent("3.00");
+
+  //移除熱熔巧克力醬並檢查小計
+  await user.click(hotFudgeCheckbox);
+  expect(toppingsTotal).toHaveTextContent("1.50");
+});
