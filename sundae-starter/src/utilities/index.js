@@ -21,3 +21,14 @@ export function formatCurrency(currency) {
     minimumFractionDigits: 0,
   }).format(currency);
 }
+
+//顯示翻譯名稱
+export const displayFlavor = (flavor) => {
+  const scoopFlavors = {
+    'Mint chip': '薄荷巧克力',
+    'Vanilla': '香草',
+    'Chocolate': '巧克力',
+    'Salted caramel': '海鹽焦糖'
+  }
+  return scoopFlavors[flavor] || flavor;
+};
