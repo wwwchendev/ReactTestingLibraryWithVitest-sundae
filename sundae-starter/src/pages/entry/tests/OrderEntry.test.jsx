@@ -1,9 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../../test-utils/testing-library-utils";
 import { HttpResponse, http } from "msw";
 import { server } from "../../../mocks/server";
 import OrderEntry from "../OrderEntry";
-//context
-import { OrderDetailsProvider } from '../../../contexts/OrderDetails';
 
 //設定一個已知會出錯的測試
 test("測試錯誤處理機制", async () => {
@@ -17,7 +15,7 @@ test("測試錯誤處理機制", async () => {
     })
   );
   //重新渲染組件
-  render(<OrderEntry />, { wrapper: OrderDetailsProvider });
+  render(<OrderEntry />);
 
   //斷言頁面中出現2個alert
   // const alerts = await screen.findAllByRole("alert");

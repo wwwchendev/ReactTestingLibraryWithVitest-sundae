@@ -1,13 +1,11 @@
 //totalUpdates.test.jsx 用來測試整體元件更新
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../../test-utils/testing-library-utils";
 import userEvent from "@testing-library/user-event";
 import Options from "../Options";
-//context
-import { OrderDetailsProvider } from '../../../contexts/OrderDetails';
 
 test("基底改變的時候更新基底小計價格", async () => {
   const user = userEvent.setup();
-  render(<Options optionType="scoops" />, { wrapper: OrderDetailsProvider });
+  render(<Options optionType="scoops" />);
 
   //確認總金額初始值為 $0.00
   const scoopsSubtotal = screen.getByText("基底 小計: $", { exact: false });
