@@ -55,13 +55,17 @@ test("配料改變的時候更新配料小計價格", async () => {
 });
 
 describe("累計", () => {
+  test("測試總額是否從 $0.00 開始", async () => {
+    const { unmount } = render(<OrderEntry />);
+    const grandTotal = screen.getByRole("heading", { name: /總計: \$/ });
+    expect(grandTotal).toHaveTextContent("0.00");
+    unmount();
+  });
 
   test("先添加基底，總計會正確更新", async () => {
     const user = userEvent.setup();
-    //測試總額是否從 $0.00 開始
     render(<OrderEntry />);
     const grandTotal = screen.getByRole("heading", { name: /總計: \$/ });
-    expect(grandTotal).toHaveTextContent("0.00");
 
     //將香草口味基底數量更新為2 並檢查總計(2*2=4)
     const vanillaInput = await screen.findByRole("spinbutton", {

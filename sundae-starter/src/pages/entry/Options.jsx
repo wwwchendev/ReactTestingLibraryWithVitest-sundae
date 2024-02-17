@@ -15,10 +15,16 @@ export default function Options({ optionType }) {
 
   // optionType 可能是 'scoops' 或 'toppings
   useEffect(() => {
+    //明確卸載元件->在清除函數中使用AbortController中止非同步操作
+    const controller = new AbortController();
     axios
-      .get(`http://localhost:3030/${optionType}`)
+      .get(`http://localhost:3030/${optionType}`, { signal: controller.signal })
       .then((response) => setItems(response.data))
-      .catch((error) => setError(true));
+      .catch((error) => {
+        if (error.name !== 'CanceledError') setError(true)
+      });
+
+    return () => { controller.abort(); }
   }, [optionType]);
 
   if (error) { return <AlertBanner variant={'danger'} />; }
