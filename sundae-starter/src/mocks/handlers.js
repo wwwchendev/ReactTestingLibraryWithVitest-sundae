@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw'
+import { http, delay, HttpResponse } from 'msw'
 
 //定義請求處理程序(handlers)
 export const handlers = [
@@ -23,5 +23,10 @@ export const handlers = [
         "imagePath": "/images/peanut-butter-cups.png"
       },
     ]);
+  }),
+  http.post("http://localhost:3030/order", async () => {
+    // 在這裡新增 100 毫秒的暫停，讓 jest 有機會看到「正在載入」狀態
+    await delay(100);
+    return HttpResponse.json({ orderNumber: 123455676 }, { status: 201 });
   }),
 ];
