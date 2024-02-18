@@ -19,7 +19,9 @@ export default function ScoopOptions({ name, imagePath }) {
       && Math.floor(currentValueFloat) === currentValueFloat;
     setIsValid(valueIsValid);
 
-    updateItemCount(name, parseInt(currentValue), "scoops");
+    // 如果數值有效則使用更新數值； 如果無效更新數值為0
+    const newValue = valueIsValid ? parseInt(currentValue) : 0;
+    updateItemCount(name, newValue, "scoops");
   };
   return (
     <Col xs={12} sm={6} md={4} lg={3} style={{ textAlign: "center" }}>
