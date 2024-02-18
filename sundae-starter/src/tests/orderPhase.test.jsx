@@ -72,3 +72,28 @@ test("正常流程下的訂單階段", async () => {
 
   unmount(); //明確卸載組件以觸發清理時的網絡請求取消
 });
+
+test("如果沒有選擇配料，配料標題不會出現在訂單明細頁面上", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  // 增加基底但不選擇配料
+  // await screen.findByRole 是一個異步操作，它會等待元素出現在 DOM 中後再返回元素，因此在這種情況下使用 findByRole 更合適，因為它會等待 React 渲染完成後再查找元素。
+  const vanillaInput = await screen.findByRole("spinbutton", { name: /香草/i });
+  await user.clear(vanillaInput);
+  await user.type(vanillaInput, "1");
+
+  const chocolateInput = screen.getByRole("spinbutton", { name: /巧克力/i });
+  await user.clear(chocolateInput);
+  await user.type(chocolateInput, "2");
+
+  // 找到並點擊提交訂單按鈕
+  const orderSummaryButton = screen.getByRole("button", { name: /提交訂單/i });
+  await user.click(orderSummaryButton);
+
+  const scoopsHeading = screen.getByRole("heading", { name: "聖代基底: $6.00" });
+  expect(scoopsHeading).toBeInTheDocument();
+
+  const toppingsHeading = screen.queryByRole("heading", { name: /配料:/i });
+  expect(toppingsHeading).not.toBeInTheDocument();
+});
