@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 //元件
 import OrderEntry from "./pages/entry/OrderEntry";
 import OrderSummary from "./pages/summary/OrderSummary";
-// import OrderConfirmation from "./pages/confirmation/OrderConfirmation";
+import OrderConfirmation from "./pages/confirmation/OrderConfirmation";
 //context
 import { OrderDetailsProvider } from "./contexts/OrderDetails";
 
@@ -19,10 +19,10 @@ export default function App() {
     case "review":
       Component = OrderSummary;
       break;
-    // case "completed":
-    //   Component = OrderConfirmation;
-    //   break;
-    // default:
+    case "completed":
+      Component = OrderConfirmation;
+      break;
+    default:
   }
 
   return (
@@ -31,7 +31,6 @@ export default function App() {
         <h1 className='text-center'>專屬繽紛聖代</h1>
         <p className='text-center'>Sundaes On Demand</p>
         {<Component setOrderPhase={setOrderPhase} />}
-        <OrderSummary />
       </Container>
     </OrderDetailsProvider>
   );
