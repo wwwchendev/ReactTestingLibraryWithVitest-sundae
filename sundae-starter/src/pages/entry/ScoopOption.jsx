@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
@@ -6,9 +7,20 @@ import { displaySundaeName } from '../../utilities';
 
 export default function ScoopOptions({ name, imagePath }) {
   const { updateItemCount } = useOrderDetails();
-  const handleChange = (e) =>
-    updateItemCount(name, parseInt(e.target.value), "scoops");
+  const [isValid, setIsValid] = useState(true);
 
+  const handleChange = (event) => {
+    const currentValue = event.target.value;
+    const currentValueFloat = parseFloat(currentValue); //確保使用數字而不是字串進行驗證
+
+    //檢查數值是否有效
+    const valueIsValid = 0 <= currentValueFloat
+      && currentValueFloat <= 10
+      && Math.floor(currentValueFloat) === currentValueFloat;
+    setIsValid(valueIsValid);
+
+    updateItemCount(name, parseInt(currentValue), "scoops");
+  };
   return (
     <Col xs={12} sm={6} md={4} lg={3} style={{ textAlign: "center" }}>
       <img
@@ -35,7 +47,7 @@ export default function ScoopOptions({ name, imagePath }) {
             type="number"
             defaultValue={0}
             onChange={handleChange}
-            min={0}
+            isInvalid={!isValid}
           />
         </Col>
       </Form.Group>
